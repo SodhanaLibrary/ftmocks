@@ -1,4 +1,4 @@
-\### Setting up ftmocks-server and running mock server for tests
+### Setting up ftmocks-server and running mock server for tests
 
 1. Clone the repository:
    ```sh
