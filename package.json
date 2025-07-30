@@ -1,0 +1,12 @@
+{
+  "name": "ftmocks",
+  "version": "1.0.1",
+  "description": "Mock file initializer",
+  "main": "index.js",
+  "bin": {
+    "ftmocks": "./index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
