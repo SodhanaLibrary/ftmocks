@@ -33,7 +33,7 @@ PREFERRED_SERVER_PORTS=[6080]
 `
   );
   const envPath = path.join(process.cwd(), "ftmocks.env");
-  const setupReadmeContent = fs.readFileSync(
+  let setupReadmeContent = fs.readFileSync(
     path.join(__dirname, "SETUP_README.md"),
     "utf8"
   );
