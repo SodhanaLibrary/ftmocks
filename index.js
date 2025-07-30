@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+const { execSync } = require("child_process");
 
 function createFile(filePath, content) {
   if (!fs.existsSync(filePath)) {
@@ -44,4 +45,41 @@ PREFERRED_SERVER_PORTS=[6080]
   createFile("README.md", setupReadmeContent);
 }
 
-init();
+function runCommand(command, options = {}) {
+  console.log(`▶️  ${command}`);
+  execSync(command, { stdio: "inherit", ...options });
+}
+
+function setup() {
+  const repoURL = "https://github.com/SodhanaLibrary/ftmocks-server.git";
+  const folderName = "ftmocks-server";
+
+  if (fs.existsSync(folderName)) {
+    console.log(`⚠️  Folder '${folderName}' already exists. Skipping clone.`);
+  } else {
+    runCommand(`git clone ${repoURL}`);
+  }
+
+  const projectPath = path.join(process.cwd(), folderName);
+  if (fs.existsSync(projectPath)) {
+    process.chdir(projectPath);
+    runCommand("npm install");
+    runCommand("npm start");
+  } else {
+    console.error("❌ Setup failed: folder not found.");
+  }
+}
+
+// Entry
+const command = process.argv[2];
+
+switch (command) {
+  case "init":
+    init();
+    break;
+  case "setup":
+    setup();
+    break;
+  default:
+    console.log("❓ Unknown command. Use 'init' or 'setup'.");
+}
