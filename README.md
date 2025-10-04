@@ -32,3 +32,9 @@ Initialize a New Mock Project along with playwright:
 ```bash
 npx ftmocks init-playwright
 ```
+
+Initialize a New Mock Project along with playwright and ftmocks-server:
+
+```bash
+npx ftmocks init-playwright-all
+```
