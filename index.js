@@ -2,7 +2,17 @@
 
 const fs = require("fs");
 const path = require("path");
-const { execSync } = require("child_process");
+const { execSync, exec } = require("child_process");
+
+function runCommandSync(command, options = {}) {
+  console.log(`▶️  ${command}`);
+  execSync(command, { stdio: "inherit", ...options });
+}
+
+function runCommandAsync(command, options = {}) {
+  console.log(`▶️  ${command}`);
+  exec(command, { stdio: "inherit", ...options });
+}
 
 function createFile(filePath, content) {
   if (!fs.existsSync(filePath)) {
@@ -23,8 +33,11 @@ function createFolder(folderPath) {
 }
 
 function init() {
+  createFolder("ftmocks");
+  process.chdir("ftmocks");
   createFile("mockServer.config.json", "{}");
   createFolder("defaultMocks");
+  createFile("defaultMocks/_mock_list.json", "[]");
   createFile(
     "ftmocks.env",
     `MOCK_DIR=./
@@ -44,39 +57,47 @@ FALLBACK_DIR=../public
     `npm start ${envPath}`
   );
   createFile("README.md", setupReadmeContent);
+  process.chdir("..");
 }
 
 function initPlaywright() {
   init();
   createFolder("playwright");
   process.chdir("playwright");
-  runCommand("npx playwright install");
+  runCommandSync("npm init playwright@latest");
+  runCommandSync("npx playwright install");
+  runCommandSync("npm install --save ftmocks-utils");
+  process.chdir("..");
 }
 
-function runCommand(command, options = {}) {
-  console.log(`▶️  ${command}`);
-  execSync(command, { stdio: "inherit", ...options });
-}
-
-function setup() {
+function setup(envPath) {
   const repoURL = "https://github.com/SodhanaLibrary/ftmocks-server.git";
   const folderName = "ftmocks-server";
 
   if (fs.existsSync(folderName)) {
     console.log(`⚠️  Folder '${folderName}' already exists. Skipping clone.`);
   } else {
-    runCommand(`git clone ${repoURL}`);
+    runCommandSync(`git clone ${repoURL}`);
   }
 
   const projectPath = path.join(process.cwd(), folderName);
   if (fs.existsSync(projectPath)) {
     process.chdir(projectPath);
-    runCommand("npm install");
-    runCommand("npx playwright install");
-    runCommand("npm start");
+    runCommandSync("npm install");
+    runCommandSync("npx playwright install");
+    runCommandAsync(`npm start ${envPath || "my-project.env"}`);
+    process.chdir("..");
+    setTimeout(() => {
+      runCommandAsync(`open http://localhost:5000/`);
+    }, 1000);
   } else {
     console.error("❌ Setup failed: folder not found.");
   }
+}
+
+function initPlaywrightAll() {
+  initPlaywright();
+  setup("../ftmocks/ftmocks.env");
 }
 
 // Entry
@@ -91,6 +112,9 @@ switch (command) {
     break;
   case "init-playwright":
     initPlaywright();
+    break;
+  case "init-playwright-all":
+    initPlaywrightAll();
     break;
   default:
     console.log("❓ Unknown command. Use 'init' or 'setup'.");

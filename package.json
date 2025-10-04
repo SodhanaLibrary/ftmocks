@@ -1,7 +1,7 @@
 {
   "name": "ftmocks",
-  "version": "1.0.4",
-  "description": "Mock file initializer",
+  "version": "1.0.6",
+  "description": "FtMocks file initializer",
   "main": "index.js",
   "bin": {
     "ftmocks": "./index.js"
