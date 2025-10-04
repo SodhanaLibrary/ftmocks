@@ -23,7 +23,6 @@ function createFolder(folderPath) {
 }
 
 function init() {
-  createFile("default.json", "[]");
   createFile("mockServer.config.json", "{}");
   createFolder("defaultMocks");
   createFile(
@@ -31,6 +30,8 @@ function init() {
     `MOCK_DIR=./
 PORT=5000
 PREFERRED_SERVER_PORTS=[6080]
+PLAYWRIGHT_DIR=../playwright
+FALLBACK_DIR=../public
 `
   );
   const envPath = path.join(process.cwd(), "ftmocks.env");
@@ -43,6 +44,13 @@ PREFERRED_SERVER_PORTS=[6080]
     `npm start ${envPath}`
   );
   createFile("README.md", setupReadmeContent);
+}
+
+function initPlaywright() {
+  init();
+  createFolder("playwright");
+  process.chdir("playwright");
+  runCommand("npx playwright install");
 }
 
 function runCommand(command, options = {}) {
@@ -64,6 +72,7 @@ function setup() {
   if (fs.existsSync(projectPath)) {
     process.chdir(projectPath);
     runCommand("npm install");
+    runCommand("npx playwright install");
     runCommand("npm start");
   } else {
     console.error("❌ Setup failed: folder not found.");
@@ -79,6 +88,9 @@ switch (command) {
     break;
   case "setup":
     setup();
+    break;
+  case "init-playwright":
+    initPlaywright();
     break;
   default:
     console.log("❓ Unknown command. Use 'init' or 'setup'.");
