@@ -14,7 +14,6 @@ This command creates the following structure in your current directory:
 
 ```
 .
-├── default.json              # Default mock configurations
 ├── mockServer.config.json    # Mock server configuration
 ├── defaultMocks/            # Directory for default mock files
 ├── ftmocks.env              # Environment configuration
