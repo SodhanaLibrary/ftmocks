@@ -95,6 +95,17 @@ function setup(envPath) {
   }
 }
 
+function setupExamples() {
+  const repoURL = "https://github.com/SodhanaLibrary/ftmocks-examples.git";
+  const folderName = "ftmocks-examples";
+
+  if (fs.existsSync(folderName)) {
+    console.log(`⚠️  Folder '${folderName}' already exists. Skipping clone.`);
+  } else {
+    runCommandSync(`git clone ${repoURL}`);
+  }
+}
+
 function initPlaywrightAll() {
   initPlaywright();
   setup("../ftmocks/ftmocks.env");
@@ -109,6 +120,9 @@ switch (command) {
     break;
   case "setup":
     setup();
+    break;
+  case "setup-examples":
+    setupExamples();
     break;
   case "init-playwright":
     initPlaywright();
