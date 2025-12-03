@@ -87,11 +87,28 @@ function setup(envPath) {
     process.chdir(projectPath);
     runCommandSync("npm install");
     runCommandSync("npx playwright install");
-    runCommandAsync(`npm start ${envPath || "my-project.env"}`);
-    process.chdir("..");
-    setTimeout(() => {
-      runCommandAsync(`open http://localhost:5000/`);
-    }, 1000);
+    if (envPath) {
+      fs.writeFileSync(
+        "projects.json",
+        JSON.stringify(
+          [
+            {
+              env_file: envPath,
+              urls: [],
+              patterns: [],
+            },
+          ],
+          null,
+          2
+        ),
+        "utf8"
+      );
+    }
+    // runCommandAsync(`npm start ${envPath || "my-project.env"}`);
+    // process.chdir("..");
+    // setTimeout(() => {
+    //   runCommandAsync(`open http://localhost:5000/`);
+    // }, 1000);
   } else {
     console.error("❌ Setup failed: folder not found.");
   }
