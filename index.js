@@ -64,9 +64,11 @@ function initPlaywright() {
   init();
   createFolder("playwright");
   process.chdir("playwright");
-  runCommandSync("npm init playwright@latest");
+  runCommandSync("npm init playwright@latest -- --browser=chromium");
   runCommandSync("npx playwright install");
   runCommandSync("npm install --save ftmocks-utils");
+  runCommandSync("npm install --save pixelmatch");
+  runCommandSync("npm install --save pngjs");
   process.chdir("..");
 }
 
