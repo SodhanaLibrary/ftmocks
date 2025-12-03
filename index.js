@@ -97,6 +97,11 @@ function setup(envPath) {
               urls: [],
               patterns: [],
             },
+            {
+              env_file: "my-project.env",
+              urls: ["http://localhost:4050"],
+              patterns: ["^/api/.*"],
+            },
           ],
           null,
           2
